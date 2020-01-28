@@ -1,0 +1,43 @@
+.form {
+    margin-top: 25px;
+    font-size: 0;
+    padding-bottom: 32px;
+
+    &__label {
+        font-size: 18px;
+    }
+
+    &__input {
+        box-shadow: inset 6px 6px 6px 0px rgba(0,0,0,0.1);
+        border: 1px solid #909090;
+        background: #f2f2f2;
+        width: 182px;
+        height: 39px;
+        box-sizing: border-box;
+        margin-right: 18px;
+        font-size: 16px;
+        padding-left: 18px;
+        @media (max-width: 400px) {
+            width: 100%;
+            margin: 0;
+            margin-bottom: 5px;
+        }
+    }
+
+    &__submit {
+        width: 182px;
+        height: 39px;
+        background-color: #68a977;
+        color: #ffffff;
+        border: 0;
+        cursor: pointer;
+        font-size: 18px;
+        box-sizing: border-box;
+        padding: 0;
+        position: relative;
+        top: 1px;
+        @media (max-width: 400px) {
+            width: 100%;
+        }
+    }
+}

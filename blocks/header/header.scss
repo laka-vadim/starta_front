@@ -1,0 +1,38 @@
+.header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 89px 6px 32px 6px;
+    box-sizing: border-box;
+    @media (max-width: 1200px) {
+        max-width: 800px;
+    }
+    @media (max-width: 800px) {
+        max-width: 600px;
+    }
+    @media (max-width: 600px) {
+        max-width: 400px;
+    }
+    @media (max-width: 600px) {
+        max-width: 400px;
+    }
+
+    &__title {
+        font-size: 48px;
+        line-height: 48px;
+        margin: 0;
+        color: #227947;
+        @media (max-width: 400px) {
+            font-size: 40px;
+        }
+    }
+
+    &__paragraph {
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0;
+        color: #383838;
+        @media (max-width: 400px) {
+            font-size: 15px;
+        }
+    }
+}

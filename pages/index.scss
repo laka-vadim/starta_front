@@ -1,0 +1,12 @@
+@import url("../vendors/normalize.css");
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700&display=swap&subset=cyrillic');
+@import url("../blocks/header/header.scss");
+@import url("../blocks/main/main.scss");
+@import url("../blocks/calendar/calendar.scss");
+@import url("../blocks/form/form.scss");
+
+body {
+    margin: 0;
+    font-family: 'Ubuntu', sans-serif;
+    min-width: 320px;
+}
