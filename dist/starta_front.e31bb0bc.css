@@ -515,6 +515,10 @@ template {
     height: auto;
   }
 }
+.calendar__days li.calendar__day_choosen {
+  background-color: #227947;
+  color: #ffffff;
+}
 .form {
   margin-top: 25px;
   font-size: 0;

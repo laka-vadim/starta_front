@@ -214,11 +214,151 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"../vendors/normalize.css":"vendors/normalize.css","../blocks/header/header.scss":"blocks/header/header.scss","../blocks/main/main.scss":"blocks/main/main.scss","../blocks/calendar/calendar.scss":"blocks/calendar/calendar.scss","../blocks/form/form.scss":"blocks/form/form.scss","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.js":[function(require,module,exports) {
+},{"../vendors/normalize.css":"vendors/normalize.css","../blocks/header/header.scss":"blocks/header/header.scss","../blocks/main/main.scss":"blocks/main/main.scss","../blocks/calendar/calendar.scss":"blocks/calendar/calendar.scss","../blocks/form/form.scss":"blocks/form/form.scss","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"vendors/mask.js":[function(require,module,exports) {
+window.addEventListener("DOMContentLoaded", function () {
+  [].forEach.call(document.querySelectorAll('.tel'), function (input) {
+    var keyCode;
+
+    function mask(event) {
+      event.keyCode && (keyCode = event.keyCode);
+      var pos = this.selectionStart;
+      if (pos < 3) event.preventDefault();
+      var matrix = "+7 (___) ___-__-__",
+          i = 0,
+          def = matrix.replace(/\D/g, ""),
+          val = this.value.replace(/\D/g, ""),
+          new_value = matrix.replace(/[_\d]/g, function (a) {
+        return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
+      });
+      i = new_value.indexOf("_");
+
+      if (i != -1) {
+        i < 5 && (i = 3);
+        new_value = new_value.slice(0, i);
+      }
+
+      var reg = matrix.substr(0, this.value.length).replace(/_+/g, function (a) {
+        return "\\d{1," + a.length + "}";
+      }).replace(/[+()]/g, "\\$&");
+      reg = new RegExp("^" + reg + "$");
+      if (!reg.test(this.value) || this.value.length < 5 || keyCode > 47 && keyCode < 58) this.value = new_value;
+      if (event.type == "blur" && this.value.length < 5) this.value = "";
+    }
+
+    input.addEventListener("input", mask, false);
+    input.addEventListener("focus", mask, false);
+    input.addEventListener("blur", mask, false);
+    input.addEventListener("keydown", mask, false);
+  });
+});
+},{}],"blocks/calendar/calendar.js":[function(require,module,exports) {
+window.addEventListener("DOMContentLoaded", function () {
+  var months = document.querySelectorAll(".calendar__days");
+
+  function getDayOfWeek(year, month) {
+    return new Date(year, month, 0).getDay();
+  }
+
+  function daysInMonth(year, month) {
+    return 33 - new Date(year, month, 33).getDate();
+  }
+
+  ;
+
+  function initYear(year) {
+    [].forEach.call(months, function (element, index) {
+      for (var i = 0; i < getDayOfWeek(year, index); i++) {
+        element.appendChild(document.createElement("span"));
+      }
+
+      for (var _i = 1; _i <= daysInMonth(year, index); _i++) {
+        var date = document.createElement("li");
+        date.innerText = _i;
+        element.appendChild(date);
+      }
+    });
+  }
+
+  function syncData() {
+    fetch("http://localhost:3000/init", {
+      method: "GET"
+    }).then(function (res) {
+      if (res.ok) return res.json();else console.log("err");
+    }).then(function (res) {
+      return initYear(res.date);
+    }).catch(function (err) {
+      return console.log(err.message);
+    });
+  }
+
+  syncData();
+});
+},{}],"blocks/form/form.js":[function(require,module,exports) {
+window.addEventListener("DOMContentLoaded", function () {
+  calendar = document.getElementById("calendar");
+  phoneForm = document.forms.callback;
+
+  function renderChoose(elem) {
+    var checkOther = document.querySelector("li.calendar__day_choosen");
+
+    if (checkOther) {
+      checkOther.classList.toggle("calendar__day_choosen");
+      elem.classList.toggle("calendar__day_choosen");
+    } else {
+      elem.classList.toggle("calendar__day_choosen");
+    }
+  }
+
+  function chooseDate(event) {
+    if (event.target.tagName == "LI") {
+      var day = event.target.innerText;
+      var month = event.target.parentNode.dataset.month;
+      renderChoose(event.target);
+      window.choosenDate = {
+        day: day,
+        month: month
+      };
+      console.log(window.choosenDate);
+    }
+
+    ;
+  }
+
+  ;
+
+  function validatePhone(phoneInput) {
+    regExp = /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
+
+    if (regExp.exec(phoneInput.value)) {
+      return true;
+    }
+  }
+
+  ;
+
+  function sendForm(event) {
+    event.preventDefault();
+
+    if (validatePhone(phoneForm.elements.phone)) {
+      console.log("true");
+    }
+  }
+
+  ;
+  phoneForm.addEventListener("submit", sendForm);
+  calendar.addEventListener("click", chooseDate);
+});
+},{}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./pages/index.scss");
-},{"./pages/index.scss":"pages/index.scss"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+require("./vendors/mask.js");
+
+require("./blocks/calendar/calendar.js");
+
+require("./blocks/form/form.js");
+},{"./pages/index.scss":"pages/index.scss","./vendors/mask.js":"vendors/mask.js","./blocks/calendar/calendar.js":"blocks/calendar/calendar.js","./blocks/form/form.js":"blocks/form/form.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -246,7 +386,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61775" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59099" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

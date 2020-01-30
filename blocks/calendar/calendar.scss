@@ -5,6 +5,8 @@ $day-txt: #0d592d;
 $day-bg: #ffffff;
 $weekend-bg: #e2907a;
 $weekend-txt: #ffffff;
+$choosen-bg: #0d592d;
+$choosen-txt: #ffffff;
 
 .calendar {
     display: grid;
@@ -89,6 +91,10 @@ $weekend-txt: #ffffff;
             @media (max-width: 400px) {
                 width: auto;
                 height: auto;
+            }
+            &.calendar__day_choosen {
+                background-color: #227947;
+                color: #ffffff;
             }
         }
         
