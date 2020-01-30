@@ -563,6 +563,10 @@ template {
     width: 100%;
   }
 }
+.form__err-block {
+  font-size: 14px;
+  color: red;
+}
 @import url("https://fonts.googleapis.com/css?family=Ubuntu:400,700&display=swap&subset=cyrillic");
 body {
   margin: 0;

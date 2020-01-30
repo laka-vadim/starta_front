@@ -295,8 +295,10 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 },{}],"blocks/form/form.js":[function(require,module,exports) {
 window.addEventListener("DOMContentLoaded", function () {
-  calendar = document.getElementById("calendar");
-  phoneForm = document.forms.callback;
+  var calendar = document.getElementById("calendar");
+  var phoneForm = document.forms.callback;
+  var errBlock = document.getElementById("err-block");
+  var bookDate;
 
   function renderChoose(elem) {
     var checkOther = document.querySelector("li.calendar__day_choosen");
@@ -314,11 +316,10 @@ window.addEventListener("DOMContentLoaded", function () {
       var day = event.target.innerText;
       var month = event.target.parentNode.dataset.month;
       renderChoose(event.target);
-      window.choosenDate = {
+      bookDate = {
         day: day,
         month: month
       };
-      console.log(window.choosenDate);
     }
 
     ;
@@ -336,11 +337,40 @@ window.addEventListener("DOMContentLoaded", function () {
 
   ;
 
+  function errRender(text) {
+    errBlock.innerText = text;
+  }
+
+  function sendToServer(bookInfo) {
+    fetch("http://localhost:3000/book", {
+      method: "POST",
+      body: JSON.stringify(bookInfo)
+    }).then(function (res) {
+      if (res.ok) alert("Бронь успешна");else alert("Ошибка брони");
+    }).catch(function (err) {
+      return alert("\u041E\u0448\u0438\u0431\u043Aa ".concat(err.message));
+    });
+  }
+
+  ;
+
   function sendForm(event) {
     event.preventDefault();
 
     if (validatePhone(phoneForm.elements.phone)) {
-      console.log("true");
+      if (bookDate) {
+        var bookInfo = {
+          phone: phoneForm.elements.phone.value,
+          day: bookDate.day,
+          month: bookDate.month
+        };
+        sendToServer(bookInfo);
+        errRender("");
+      } else {
+        errRender("Дата не выбрана!");
+      }
+    } else {
+      errRender("Некорректно введен номер телефона!");
     }
   }
 
@@ -386,7 +416,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59099" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52005" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

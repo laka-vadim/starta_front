@@ -1,6 +1,9 @@
 window.addEventListener("DOMContentLoaded", function() {
-    calendar = document.getElementById("calendar");
-    phoneForm = document.forms.callback;
+    const calendar = document.getElementById("calendar");
+    const phoneForm = document.forms.callback;
+    const errBlock = document.getElementById("err-block");
+
+    let bookDate;
 
     function renderChoose(elem) {
         const checkOther = document.querySelector("li.calendar__day_choosen");
@@ -17,8 +20,7 @@ window.addEventListener("DOMContentLoaded", function() {
             const day = event.target.innerText;
             const month = event.target.parentNode.dataset.month;
             renderChoose(event.target);
-            window.choosenDate = { day, month };
-            console.log(window.choosenDate);
+            bookDate = { day, month };
         };
     };
 
@@ -29,10 +31,38 @@ window.addEventListener("DOMContentLoaded", function() {
         }
     };
 
+    function errRender(text) {
+        errBlock.innerText = text;
+    }
+
+    function sendToServer(bookInfo) {
+        fetch("http://localhost:3000/book", {
+            method: "POST",
+            body: JSON.stringify(bookInfo)
+        })
+        .then((res) => {
+            if (res.ok) alert("Бронь успешна");
+            else alert("Ошибка брони");
+        })
+        .catch(err => alert(`Ошибкa ${err.message}`));
+    };
+
     function sendForm(event) {
         event.preventDefault();
         if (validatePhone(phoneForm.elements.phone)) {
-            console.log("true");
+            if (bookDate) {
+                const bookInfo = {
+                    phone: phoneForm.elements.phone.value,
+                    day: bookDate.day,
+                    month: bookDate.month
+                }
+                sendToServer(bookInfo);
+                errRender("");
+            } else {
+                errRender("Дата не выбрана!");
+            }
+        } else {
+            errRender("Некорректно введен номер телефона!");
         }
     };
 
