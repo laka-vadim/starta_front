@@ -96,6 +96,10 @@ $choosen-txt: #ffffff;
                 background-color: #227947;
                 color: #ffffff;
             }
+            &.calendar__day_isBook {
+                background-color: gray;
+                color: black;
+            }
         }
         
     }

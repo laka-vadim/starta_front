@@ -519,6 +519,10 @@ template {
   background-color: #227947;
   color: #ffffff;
 }
+.calendar__days li.calendar__day_isBook {
+  background-color: gray;
+  color: black;
+}
 .form {
   margin-top: 25px;
   font-size: 0;

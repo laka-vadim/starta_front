@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", function() {
     }
 
     function chooseDate(event) {
-        if (event.target.tagName == "LI") {
+        if (event.target.tagName == "LI" & !event.target.classList.contains("calendar__day_isBook")) {
             const day = event.target.innerText;
             const month = event.target.parentNode.dataset.month;
             renderChoose(event.target);
@@ -38,6 +38,9 @@ window.addEventListener("DOMContentLoaded", function() {
     function sendToServer(bookInfo) {
         fetch("http://localhost:3000/book", {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(bookInfo)
         })
         .then((res) => {
@@ -51,6 +54,7 @@ window.addEventListener("DOMContentLoaded", function() {
         event.preventDefault();
         if (validatePhone(phoneForm.elements.phone)) {
             if (bookDate) {
+                console.log(bookDate);
                 const bookInfo = {
                     phone: phoneForm.elements.phone.value,
                     day: bookDate.day,

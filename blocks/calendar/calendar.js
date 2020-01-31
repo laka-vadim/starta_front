@@ -10,7 +10,7 @@ window.addEventListener("DOMContentLoaded", function() {
         return 33 - new Date(year, month, 33).getDate();
     };
     
-    function initYear(year) {
+    function initYear(year, bookDates) {
         [].forEach.call(months, (element, index) => {
             for (let i = 0; i < getDayOfWeek(year, index); i++) {
                 element.appendChild(document.createElement("span"))
@@ -20,7 +20,10 @@ window.addEventListener("DOMContentLoaded", function() {
                 date.innerText = i;
                 element.appendChild(date);
             }
-    
+            days = element.querySelectorAll("li");
+            bookDates[index].forEach((elem) => {
+                days[elem-1].classList.toggle("calendar__day_isBook");
+            })
         })
     }
     
@@ -32,7 +35,7 @@ window.addEventListener("DOMContentLoaded", function() {
             if (res.ok) return res.json();
             else console.log("err");
         })
-        .then(res => initYear(res.date))
+        .then(res => initYear(res.date, res.alreadyBook))
         .catch(err => console.log(err.message));
     }
     

@@ -265,7 +265,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   ;
 
-  function initYear(year) {
+  function initYear(year, bookDates) {
     [].forEach.call(months, function (element, index) {
       for (var i = 0; i < getDayOfWeek(year, index); i++) {
         element.appendChild(document.createElement("span"));
@@ -276,6 +276,11 @@ window.addEventListener("DOMContentLoaded", function () {
         date.innerText = _i;
         element.appendChild(date);
       }
+
+      days = element.querySelectorAll("li");
+      bookDates[index].forEach(function (elem) {
+        days[elem - 1].classList.toggle("calendar__day_isBook");
+      });
     });
   }
 
@@ -285,7 +290,7 @@ window.addEventListener("DOMContentLoaded", function () {
     }).then(function (res) {
       if (res.ok) return res.json();else console.log("err");
     }).then(function (res) {
-      return initYear(res.date);
+      return initYear(res.date, res.alreadyBook);
     }).catch(function (err) {
       return console.log(err.message);
     });
@@ -312,7 +317,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   function chooseDate(event) {
-    if (event.target.tagName == "LI") {
+    if (event.target.tagName == "LI" & !event.target.classList.contains("calendar__day_isBook")) {
       var day = event.target.innerText;
       var month = event.target.parentNode.dataset.month;
       renderChoose(event.target);
@@ -344,6 +349,9 @@ window.addEventListener("DOMContentLoaded", function () {
   function sendToServer(bookInfo) {
     fetch("http://localhost:3000/book", {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(bookInfo)
     }).then(function (res) {
       if (res.ok) alert("Бронь успешна");else alert("Ошибка брони");
@@ -359,6 +367,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     if (validatePhone(phoneForm.elements.phone)) {
       if (bookDate) {
+        console.log(bookDate);
         var bookInfo = {
           phone: phoneForm.elements.phone.value,
           day: bookDate.day,
@@ -416,7 +425,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52005" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58573" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
